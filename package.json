@@ -1,0 +1,51 @@
+{
+  "name": "fitcore-platform",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0 --port 3000",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0 --port 3000",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "tsx --test tests/*.test.ts",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "worker": "tsx scripts/worker.ts",
+    "mail:latest": "tsx scripts/mail.ts",
+    "test:e2e": "node scripts/browser-smoke.mjs",
+    "admin": "tsx scripts/admin.ts",
+    "seed": "tsx scripts/seed.ts",
+    "format": "prettier --write src scripts tests docs *.json *.mjs *.ts *.md",
+    "test:preview": "node scripts/preview-smoke.mjs"
+  },
+  "dependencies": {
+    "@js-temporal/polyfill": "^0.5.1",
+    "lucide-react": "^0.468.0",
+    "next": "^16.0.0",
+    "pg": "^8.16.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "sharp": "^0.34.5",
+    "stripe": "^20.0.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@tailwindcss/postcss": "^4.1.16",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.15.6",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "^16.0.0",
+    "prettier": "^3.9.10",
+    "tailwindcss": "^4.1.16",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "type": "module",
+  "engines": {
+    "node": "24.x"
+  }
+}
