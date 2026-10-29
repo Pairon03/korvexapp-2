@@ -1,6 +1,8 @@
 # FitCore Korvex — biblioteca de movimento
 
-A biblioteca em `/biblioteca` reúne os **38 exercícios** do catálogo fornecido, com animações 3D originais, busca, filtros e fichas de execução. O personal importa exercícios canônicos na aplicação conectada; a animação acompanha o vínculo no treino do aluno. A prévia permite experimentar a seleção sem salvar dados.
+A biblioteca em `/biblioteca` reúne os **38 exercícios** do catálogo fornecido, com animações 3D com corpo humano contínuo, busca, filtros e fichas de execução. O personal importa exercícios canônicos na aplicação conectada; a animação acompanha o vínculo no treino do aluno. A prévia permite experimentar a seleção sem salvar dados.
+
+A malha inclui rosto, cabelo, mãos com dedos e pés, com pele deformada por um rig. Base gráfica MakeHuman CC0, incluída localmente, sem usar os assets do vídeo de referência.
 
 Detalhes, limites visuais e validação: [biblioteca de exercícios](docs/EXERCISE-LIBRARY.md). Pipeline de vídeos: [produção 3D](docs/3D-PRODUCTION.md).
 

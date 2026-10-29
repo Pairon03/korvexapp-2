@@ -1,5 +1,12 @@
 /** Exports original motion data for the offline Blender pipeline. */
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import {
+  getHumanBoneTarget,
+  getHumanBoneRotation,
+  getHumanGrip,
+  type HumanAsset,
+} from "../src/domain/human-rig";
 import { resolve, dirname } from "node:path";
 import {
   exerciseCatalog,
@@ -21,6 +28,12 @@ if (!Number.isInteger(fps) || fps < 1 || fps > 120)
   throw Error("FPS must be an integer from 1 to 120.");
 const output = resolve(value("--out", ".local/3d/motions"));
 await mkdir(output, { recursive: true });
+const humanFile = resolve(
+  value("--human-asset", "public/models/human/athletic-human.json"),
+);
+const humanText = await readFile(humanFile, "utf8");
+const human = JSON.parse(humanText) as HumanAsset;
+const humanHash = createHash("sha256").update(humanText).digest("hex");
 for (const ex of selected) {
   if (!ex) continue;
   const seconds = Number(
@@ -34,13 +47,28 @@ for (const ex of selected) {
   const count = Math.max(2, Math.round(seconds * fps));
   const getFrame = motion.getTimedExerciseMotion;
   const data = {
-    schema: 1,
+    schema: 2,
+    humanGrip: getHumanGrip(ex.id),
+    humanModel: {
+      file: "athletic-human.json",
+      sha256: humanHash,
+      boneCount: human.bones.length,
+    },
     exercise: ex,
     presentation: motion.motionPresentation[ex.id],
     fps,
     durationSeconds: count / fps,
     frameCount: count,
-    frames: Array.from({ length: count }, (_, n) => getFrame(ex.id, n / count)),
+    frames: Array.from({ length: count }, (_, n) => {
+      const frame = getFrame(ex.id, n / count);
+      return {
+        ...frame,
+        humanBones: human.bones.map((bone) => {
+          const target = getHumanBoneTarget(bone, human.restPose, frame.body);
+          return { ...target, rotation: getHumanBoneRotation(bone, target) };
+        }),
+      };
+    }),
   };
   const file = resolve(output, `${ex.id}.json`);
   await mkdir(dirname(file), { recursive: true });

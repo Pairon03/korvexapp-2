@@ -1,62 +1,68 @@
-# Produção das demonstrações 3D
+# Produção das demonstrações humanas 3D
 
-O catálogo tem 38 movimentos originais, com poses e equipamentos articulados. A aplicação mostra a cena 3D interativa no navegador; isso é diferente de entregar 38 arquivos de vídeo pré-renderizados. Os manequins são ilustrações estilizadas, sem captura de movimento, malha anatômica clínica ou garantia de adequação individual.
+A biblioteca usa uma malha humana contínua com rosto, cabelo, dedos, mãos e pés, em vez de peças geométricas separadas. A base gráfica e os pesos MakeHuman são CC0, com fontes, licença e hashes em `public/models/human/ASSETS.md`. O conversor, a adaptação do rig, as poses e as cenas são do FitCore. Nenhuma imagem, textura, animação ou marca do vídeo de referência foi incorporada ao projeto.
 
-O guia enviado pelo proprietário define o acabamento: cinza fosco, fundo obsidiano, luz fria com recorte ciano, foco primário laranja, sinergistas âmbar e círculos vermelhos nos cuidados do catálogo. Câmera, músculos e cadências estão em `src/domain/exercise-motion.ts`, em `motionPresentation`. `getTimedExerciseMotion` aplica a cadência do guia, incluindo as pausas.
+O corpo adulto atlético tem 13.380 vértices e 26.756 triângulos. Os pesos originais foram reduzidos a quatro influências por vértice em 19 ossos; a pele permanece uma superfície conectada. O alvo `gripPositions` fecha os dedos sem modificar rosto, corpo ou punhos. O player mantém as mãos abertas em apoios como flexão e prancha.
 
-A prancha usa um ciclo editorial de respiração de 6 segundos porque o guia não determina uma duração. O dead bug alterna os membros em 4,2 segundos. As especificações descrevem a apresentação da animação, não uma prescrição de ritmo para o aluno.
+## Fontes e ferramentas
 
-## Dependências e arquivos
+- Node.js 24 e as dependências do projeto.
+- Blender 4.3.2 ou compatível, FFmpeg e FFprobe; NumPy está disponível no Python do Blender.
+- `scripts/prepare-human-model.py`: conversor próprio dos dados gráficos CC0, usando `--source PATH` para um checkout MakeHuman na revisão registrada. Não importa nem copia o programa AGPL MakeHuman.
+- `src/domain/human-rig.ts`: alvos, rotações e intensidade de pegada compartilhados com o player.
+- `scripts/export-exercise-motion.ts`: exporta as 38 poses, equipamentos, tempos e transformações humanas por frame.
+- `scripts/human_deformer.py`: aplica o mesmo skinning linear do Three.js ao corpo para o render Blender.
+- `scripts/render-exercises.py`: cena, malha humana, materiais, equipamentos, câmera e codificação.
+- `scripts/render-exercise-posters.py`: gera as 38 miniaturas humanas WebP e um manifesto com hashes.
 
-- Node.js 24 com as dependências do projeto instaladas.
-- Blender 4.3.2 ou compatível, com Eevee e Workbench.
-- FFmpeg e FFprobe com libx264; libx265 é necessário apenas para HEVC.
-- `scripts/export-exercise-motion.ts` gera poses JSON do catálogo canônico.
-- `scripts/render-exercises.py` cria um manequim original, equipamentos, câmera, materiais, luzes, imagens e vídeo.
-- Use `.local/3d` para os JSON, frames e projetos Blender intermediários. Essa pasta já é ignorada pelo Git.
+Use `.local/3d` para JSON, PNG, projetos Blender e logs intermediários; esses arquivos são ignorados pelo Git.
 
-## Gerar os dados dos 38 exercícios
-
-Execute na raiz do repositório:
-
-```bash
-node --import tsx scripts/export-exercise-motion.ts --exercise all --fps 60 --out .local/3d/motions
-```
-
-O exportador só aceita IDs do catálogo. Ele amostra cada ciclo em 60 FPS, sem repetir o frame inicial no final. O nome do arquivo corresponde ao `catalog_id` que acompanha o exercício importado pelo personal.
-
-## Revisar um frame antes de renderizar o ciclo
+## Exportar os 38 movimentos
 
 ```bash
-XDG_CACHE_HOME=/tmp/fitcore-blender-cache blender -b -t 4 --python scripts/render-exercises.py -- \
-  --input .local/3d/motions/agachamento-goblet.json \
-  --out .local/3d/review/goblet \
-  --engine workbench --frame 60 --size 720
+npm run export:motion -- --exercise all --fps 60 --out .local/3d/human-motions
 ```
 
-`--frame` renderiza somente aquele índice. `--count 5 --no-video` mede os cinco primeiros frames. `--engine eevee --samples 16` usa luzes e materiais físicos. Workbench é uma revisão de estúdio com cavidade e sombreado; ele não reproduz o recorte ciano de Eevee nem o realismo de Octane mencionado no prompt de referência.
+O JSON de esquema 2 inclui `humanModel.sha256`, `humanGrip` e, para cada frame, `humanBones` com os mesmos alvos e quaternions usados no navegador. O pipeline rejeita uma malha cujo hash difere do usado na exportação. A matriz aplicada é `T(target) * R(target) * ScaleY * inverseBind`. O morph de dedos é aplicado antes do skinning. Uma verificação dos 13.380 vértices do goblet confirmou paridade Node/Three e Python com erro máximo menor que `1e-12`.
 
-## Renderizar um ciclo e verificar o arquivo
+As durações e pausas seguem `motionPresentation` e `getTimedExerciseMotion`. O ciclo visual da prancha é uma escolha editorial de seis segundos, porque o guia não define duração; não prescreve tempo de sustentação. O dead bug alterna os membros em 4,2 segundos.
+
+## Revisar uma imagem
 
 ```bash
-XDG_CACHE_HOME=/tmp/fitcore-blender-cache blender -b -t 4 --python scripts/render-exercises.py -- \
-  --input .local/3d/motions/agachamento-goblet.json \
-  --out .local/3d/render/agachamento-goblet \
-  --engine workbench --size 720 --codec h264 --save-blend
+OPENBLAS_NUM_THREADS=1 LP_NUM_THREADS=2 XDG_CACHE_HOME=/tmp/fitcore-blender-cache \
+blender -b -t 2 --python-exit-code 1 --python scripts/render-exercises.py -- \
+  --input .local/3d/human-motions/agachamento-goblet.json \
+  --out .local/3d/review/human-goblet --engine workbench --frame 114 --size 720
 ```
 
-O processo preserva os frames PNG e o `.blend` com as transformações animadas em keyframes, codifica o MP4 e usa FFprobe para conferir resolução, contagem de frames e taxa de quadros. O manifesto registra codec, duração, tamanho, hashes e origem dos tempos. O pipeline falha se o arquivo exceder 1.500.000 bytes; ajuste o CRF antes de publicar um arquivo maior. Não atribui validação clínica ao material.
+Workbench usa as cores dos vértices, iluminação de estúdio e detalhes de cavidade. Eevee (`--engine eevee --samples 16`) oferece luzes físicas e recorte ciano; nesta máquina, é muito mais lento. Workbench não reproduz o acabamento fotorrealista de Octane citado como referência no guia.
 
-Para montar apenas o projeto animado, sem renderizar imagens, acrescente `--no-render --save-blend`. Abra o `.blend` no Blender e use a timeline; as peças do manequim e os equipamentos têm keyframes de transformação. O projeto é articulado por objetos, sem uma malha humana deformável nem um rig anatômico.
+## Gerar as 38 prévias
 
-Para codificar outra variante a partir dos mesmos frames, use `--encode-only --codec hevc` e mantenha `--input`, `--out` e `--size` da renderização. O processo exige a sequência PNG completa. Isso evita repetir a renderização; o vídeo HEVC ganha o sufixo `.hevc.mp4` para preservar o H.264.
+```bash
+python scripts/render-exercise-posters.py --motions .local/3d/human-motions
+```
 
-O H.264 é a opção de reprodução web mais ampla. Para o formato HEVC solicitado no guia, use `--codec hevc`; ele inclui a tag `hvc1`, mas o suporte depende do dispositivo e do navegador. `--codec webm --alpha` renderiza os frames com transparência, oculta o chão e codifica VP9 com alpha; a compatibilidade e o alpha devem ser homologados nos dispositivos de destino antes do uso comercial.
+Cada WebP em `public/exercise-posters` corresponde a um exercício canônico. O arquivo `manifest.json` registra resolução, tamanho e hashes, incluindo a revisão do corpo humano. O player também usa essas imagens como prévia estática quando WebGL não estiver disponível; os controles de animação são desativados nesse caso.
 
-## Piloto e limites desta entrega
+## Renderizar e validar um vídeo
 
-O piloto publicado em `public/exercise-videos/agachamento-goblet.mp4` é um vídeo de revisão Workbench, 720×720, 60 FPS e 3,8 segundos. O poster WebP lossless acompanha o mesmo exercício e preserva exatamente os pixels do PNG original, que também fica disponível para revisão. O manifesto ao lado contém as medições reais da versão gerada. A variante `agachamento-goblet.hevc.mp4` acompanha o H.264 para revisão, sem substituir o fallback web. Foram medidos 96.247 bytes no H.264, 63.110 bytes no HEVC e 222.144 bytes no poster WebP. Ambos os vídeos têm 228 frames, 60 FPS, 720×720 e 3,8 segundos.
+```bash
+OPENBLAS_NUM_THREADS=1 LP_NUM_THREADS=2 XDG_CACHE_HOME=/tmp/fitcore-blender-cache \
+blender -b -t 2 --python-exit-code 1 --python scripts/render-exercises.py -- \
+  --input .local/3d/human-motions/agachamento-goblet.json \
+  --out .local/3d/human-pilot --engine workbench --size 720 --codec h264
+```
 
-Não foram renderizados 38 vídeos cinematográficos nem arquivos 8K. A cobertura dos 38 exercícios na aplicação usa o motor 3D interativo. Nesta máquina, o primeiro frame Eevee a 720×720 e 64 amostras levou 52,2 segundos. O benchmark de cinco frames Workbench levou 7,68 segundos e estabilizou perto de 0,8 segundo por frame. Renderizar todos os ciclos em 60 FPS exige um lote separado, com tempo de máquina e revisão técnica de cada exercício.
+O pipeline renderiza todos os frames, codifica o MP4 e usa FFprobe para validar resolução, taxa de quadros, contagem, duração e tamanho. O manifesto inclui a origem da malha, hash da malha humana, hash das poses e hash do vídeo. Arquivos com mais de 1.500.000 bytes são rejeitados.
 
-Antes da utilização comercial, um profissional deve revisar cada movimento, amplitude, equipamento, câmera e cuidado indicado, incluindo a coerência entre o texto e a demonstração. O guia solicita “forma biomecânica perfeita”, mas isso não é evidência de validação nem uma propriedade garantida pelo render.
+H.264 tem compatibilidade web mais ampla. Para HEVC, reutilize o mesmo lote com `--codec hevc --encode-only`; a tag `hvc1` é configurada, mas o suporte depende do navegador e do dispositivo. `--codec webm --alpha` é uma opção do pipeline, que precisa de homologação de transparência nos aparelhos de destino.
+
+`--save-blend` pode armazenar a animação humana em shape keys absolutos, com equipamentos em keyframes. Isso é uma animação bakeada para edição no Blender, não um rig anatômico de produção com dedos e músculos físicos. Use `--no-render --save-blend` para montar o projeto sem renderizar imagens.
+
+## O que foi produzido
+
+Os 38 exercícios usam o corpo humano no player interativo e têm prévias humanas renderizadas. O vídeo piloto em `public/exercise-videos/agachamento-goblet.mp4` e sua variante HEVC são amostras humanas de 720×720, 60 FPS e 3,8 segundos. Seus manifestos contêm as medições da versão efetivamente gerada.
+
+Não foram renderizados 38 vídeos cinematográficos nem arquivos 8K. A malha tem aparência humana e as cores indicam regiões ilustrativas; isso não constitui uma segmentação anatômica clínica nem validação biomecânica. Antes de anunciar execução técnica validada, um profissional deve revisar movimento, amplitude, pegada, equipamentos e adequação individual. Não há simulação de contato ou força.

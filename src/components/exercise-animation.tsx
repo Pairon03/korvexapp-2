@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Play, Pause, RotateCcw, Maximize2, Gauge, Move3D } from "lucide-react";
 import { getCatalogExercise } from "@/domain/exercise-catalog";
 import {
@@ -41,6 +41,11 @@ export function ExerciseAnimation({
       () => motionPresentation[exerciseId as MotionId]?.camera || "perspective",
     );
   const [fullscreenError, setFullscreenError] = useState("");
+  const [unavailable, setUnavailable] = useState(false);
+  const onUnavailable = useCallback(() => {
+    setPlaying(false);
+    setUnavailable(true);
+  }, []);
   const root = useRef<HTMLDivElement>(null),
     visible = useRef(true),
     progressRef = useRef(0);
@@ -113,6 +118,7 @@ export function ExerciseAnimation({
             exerciseId={exerciseId}
             progress={progress}
             view={view}
+            onUnavailable={onUnavailable}
           />
         </div>
         <span className={styles.angle}>
@@ -126,7 +132,7 @@ export function ExerciseAnimation({
                   ? "VISTA SUPERIOR"
                   : "VISTA LATERAL"}
         </span>
-        {!playing && (
+        {!playing && !unavailable && (
           <button
             className={styles.stagePlay}
             aria-label="Reproduzir animação"
@@ -146,7 +152,7 @@ export function ExerciseAnimation({
             <p>{frame.cue}</p>
           </div>
         </div>
-        <span className={styles.vector}>Modelo 3D original</span>
+        <span className={styles.vector}>Modelo humano 3D</span>
       </div>
       <div className={styles.controls}>
         <label className={styles.timeline}>
@@ -154,6 +160,7 @@ export function ExerciseAnimation({
           <input
             aria-label="Progresso da animação"
             type="range"
+            disabled={unavailable}
             min="0"
             max="100"
             step="0.1"
@@ -165,6 +172,7 @@ export function ExerciseAnimation({
           <div className={styles.controlGroup}>
             <button
               className={styles.play}
+              disabled={unavailable}
               aria-label={playing ? "Pausar animação" : "Reproduzir animação"}
               onClick={() => setPlaying(!playing)}
             >
@@ -183,6 +191,7 @@ export function ExerciseAnimation({
               <span className="sr-only">Velocidade da animação</span>
               <select
                 aria-label="Velocidade da animação"
+                disabled={unavailable}
                 value={speed}
                 onChange={(e) => setSpeed(Number(e.target.value))}
               >
@@ -198,6 +207,7 @@ export function ExerciseAnimation({
               <span className="sr-only">Ângulo da animação</span>
               <select
                 aria-label="Ângulo da animação"
+                disabled={unavailable}
                 value={view}
                 onChange={(e) => setView(e.target.value as ExerciseView)}
               >
@@ -257,7 +267,7 @@ export function ExerciseAnimation({
         )}
       </div>
       <p className={styles.caption}>
-        Modelo 3D estilizado · Ciclo visual de{" "}
+        Modelo humano 3D · Ciclo visual de{" "}
         {presentation.durationSeconds.toLocaleString("pt-BR")}s. Ajuste execução
         e amplitude com o personal.
       </p>

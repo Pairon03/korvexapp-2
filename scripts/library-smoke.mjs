@@ -69,6 +69,21 @@ try {
     const dialog = page.getByRole("dialog");
     await dialog.locator('[data-3d-ready="true"]').waitFor({ timeout: 30000 });
     assert.equal(
+      await dialog.locator("canvas").getAttribute("data-human-mesh"),
+      "continuous",
+    );
+    assert.equal(
+      await dialog.locator("canvas").getAttribute("data-human-vertices"),
+      "13380",
+    );
+    assert.equal(
+      (
+        await page.request.get(`${base}/exercise-posters/${ex.id}.webp`)
+      ).status(),
+      200,
+      `${ex.id} human poster exists`,
+    );
+    assert.equal(
       await dialog
         .getByRole("heading", { level: 2, name: ex.name, exact: true })
         .count(),
@@ -184,6 +199,35 @@ try {
   );
   await page.screenshot({ path: "test-results/student-animation-mobile.png" });
   assert.deepEqual(errors, []);
+  const fallbackPage = await context.newPage();
+  await fallbackPage.addInitScript(() => {
+    HTMLCanvasElement.prototype.getContext = () => null;
+  });
+  await fallbackPage.goto(`${base}/biblioteca`);
+  await fallbackPage.waitForFunction(
+    () =>
+      document.querySelector('input[aria-label="Progresso da animação"]')
+        ?.disabled,
+  );
+  assert.equal(
+    await fallbackPage
+      .getByRole("button", { name: "Reproduzir animação", exact: true })
+      .last()
+      .isDisabled(),
+    true,
+  );
+  await fallbackPage
+    .locator('img[src="/exercise-posters/agachamento-goblet.webp"]')
+    .first()
+    .waitFor();
+  assert.equal(
+    await fallbackPage
+      .locator('img[src="/exercise-posters/agachamento-goblet.webp"]')
+      .first()
+      .evaluate((e) => e.naturalWidth > 0),
+    true,
+  );
+  await fallbackPage.close();
   console.log(
     "Filters, playback, pause, restart, speed, actual canvas changes, keyboard close, mobile, demo selection and student integration passed. No browser errors.",
   );

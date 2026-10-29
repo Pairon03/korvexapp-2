@@ -203,8 +203,8 @@ export default async function Home() {
               <span>mais clareza.</span>
             </h2>
             <p>
-              38 exercícios em 10 grupos musculares. Explore demonstrações
-              vetoriais, instruções, erros comuns e opções de substituição do
+              38 exercícios em 10 grupos musculares. Explore demonstrações com
+              corpo humano em 3D, instruções e opções de substituição do
               catálogo.
             </p>
             <Link href="/biblioteca" className={styles.primary}>

@@ -8,17 +8,19 @@ import {
   type Vec3,
 } from "@/domain/exercise-motion";
 import { ExerciseFigure, type ExerciseView } from "./exercise-figure";
+import { createHumanModel, loadHumanAsset } from "./human-model";
 
-type Model = { update: (body: Skeleton) => void; group: ThreeTypes.Group };
-/** Locally rendered original 3D model. No remote models, images, or tracking. */
+/** Locally rendered continuous CC0 human mesh; no third-party model requests. */
 export function ExerciseScene({
   exerciseId,
   progress,
   view,
+  onUnavailable,
 }: {
   exerciseId: string;
   progress: number;
   view: ExerciseView;
+  onUnavailable?: () => void;
 }) {
   const host = useRef<HTMLDivElement>(null),
     state = useRef({ progress, view });
@@ -36,7 +38,10 @@ export function ExerciseScene({
     const exercise = getCatalogExercise(exerciseId);
     if (!exercise) return;
     const initialize = async () => {
-      const T = await import("three");
+      const [T, humanAsset] = await Promise.all([
+        import("three"),
+        loadHumanAsset(),
+      ]);
       if (stopped) return;
       const scene = new T.Scene();
       scene.background = new T.Color("#0D0F14");
@@ -47,7 +52,7 @@ export function ExerciseScene({
       });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
       renderer.toneMapping = T.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.12;
+      renderer.toneMappingExposure = 0.96;
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = T.PCFSoftShadowMap;
       renderer.domElement.setAttribute(
@@ -55,6 +60,11 @@ export function ExerciseScene({
         `Demonstração 3D de ${exercise.name}`,
       );
       renderer.domElement.setAttribute("role", "img");
+      renderer.domElement.setAttribute("data-human-mesh", "continuous");
+      renderer.domElement.setAttribute(
+        "data-human-vertices",
+        String(humanAsset.positions.length / 3),
+      );
       renderer.domElement.style.cssText =
         "display:block;width:100%;height:100%;";
       container.appendChild(renderer.domElement);
@@ -75,155 +85,12 @@ export function ExerciseScene({
         materials.add(m);
         return m;
       };
-      const bodyMat = material("#68747e"),
-        primary = material("#ff761c", true),
-        secondary = material("#e8b352", true),
-        equipmentMat = material("#343e49"),
+      const equipmentMat = material("#343e49"),
         steel = material("#929fac");
-      const focus = (group: string) =>
-        group === exercise.group
-          ? primary
-          : exercise.secondaryMuscles.includes(group as never)
-            ? secondary
-            : bodyMat;
-      const root = new T.Group();
-      scene.add(root);
-      const sphere = geom(new T.SphereGeometry(1, 24, 16)),
-        tubeGeo = geom(new T.CapsuleGeometry(1, 1, 6, 12));
       const yAxis = new T.Vector3(0, 1, 0);
       const vector = (p: Vec3) => new T.Vector3(...p);
-      const spherePart = (mat: ThreeTypes.Material) => {
-        const mesh = new T.Mesh(sphere, mat);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        root.add(mesh);
-        return mesh;
-      };
-      const jointParts = new Map<string, ThreeTypes.Mesh>();
-      for (const key of [
-        "head",
-        "hip",
-        "leftShoulder",
-        "rightShoulder",
-        "leftElbow",
-        "rightElbow",
-        "leftKnee",
-        "rightKnee",
-        "leftHand",
-        "rightHand",
-      ])
-        jointParts.set(
-          key,
-          spherePart(
-            key.includes("Shoulder")
-              ? focus("Ombros")
-              : key === "hip"
-                ? focus("Glúteos")
-                : bodyMat,
-          ),
-        );
-      const bones: {
-        from: keyof Skeleton;
-        to: keyof Skeleton;
-        radius: number;
-        mesh: ThreeTypes.Mesh;
-      }[] = [];
-      const bone = (
-        from: keyof Skeleton,
-        to: keyof Skeleton,
-        radius: number,
-        mat: ThreeTypes.Material,
-      ) => {
-        const mesh = new T.Mesh(tubeGeo, mat);
-        mesh.castShadow = true;
-        root.add(mesh);
-        bones.push({ from, to, radius, mesh });
-      };
-      for (const s of ["left", "right"] as const) {
-        bone(
-          `${s}Shoulder`,
-          `${s}Elbow`,
-          0.052,
-          focus(
-            exercise.group === "Tríceps" ||
-              exercise.secondaryMuscles.includes("Tríceps")
-              ? "Tríceps"
-              : "Bíceps",
-          ),
-        );
-        bone(`${s}Elbow`, `${s}Hand`, 0.038, bodyMat);
-        bone(
-          `${s}Hip`,
-          `${s}Knee`,
-          0.082,
-          focus(
-            exercise.group === "Posteriores de coxa"
-              ? "Posteriores de coxa"
-              : "Quadríceps",
-          ),
-        );
-        bone(`${s}Knee`, `${s}Ankle`, 0.052, focus("Panturrilhas"));
-        bone(`${s}Ankle`, `${s}Toe`, 0.036, bodyMat);
-      }
-      bone("chest", "neck", 0.048, bodyMat);
-      bone("neck", "head", 0.043, bodyMat);
-      // Elliptical rings form a tapered torso, rather than a cylinder.
-      const positions: number[] = [],
-        indices: number[] = [],
-        rings = [
-          [-0.04, 0.14, 0.1],
-          [0.06, 0.145, 0.115],
-          [0.17, 0.115, 0.092],
-          [0.29, 0.155, 0.11],
-          [0.41, 0.218, 0.125],
-          [0.49, 0.205, 0.1],
-        ];
-      const segments = 28;
-      rings.forEach(([y, rx, rz]) => {
-        for (let i = 0; i <= segments; i++) {
-          const a = (i / segments) * Math.PI * 2;
-          positions.push(Math.cos(a) * rx, y, Math.sin(a) * rz);
-        }
-      });
-      for (let r = 0; r < rings.length - 1; r++)
-        for (let j = 0; j < segments; j++) {
-          const a = r * (segments + 1) + j,
-            b = a + segments + 1;
-          indices.push(a, b, a + 1, b, b + 1, a + 1);
-        }
-      const torsoGeo = geom(new T.BufferGeometry());
-      torsoGeo.setAttribute(
-        "position",
-        new T.Float32BufferAttribute(positions, 3),
-      );
-      torsoGeo.setIndex(indices);
-      torsoGeo.computeVertexNormals();
-      const torso = new T.Mesh(torsoGeo, bodyMat);
-      torso.castShadow = true;
-      root.add(torso);
-      const torsoDetails = new T.Group();
-      root.add(torsoDetails);
-      const muscle = (at: Vec3, size: Vec3, mat: ThreeTypes.Material) => {
-        const mesh = new T.Mesh(sphere, mat);
-        mesh.position.set(...at);
-        mesh.scale.set(...size);
-        mesh.castShadow = true;
-        torsoDetails.add(mesh);
-      };
-      for (const sign of [-1, 1]) {
-        muscle([sign * 0.09, 0.385, 0.091], [0.1, 0.06, 0.025], focus("Peito"));
-        muscle(
-          [sign * 0.1, 0.32, -0.085],
-          [0.075, 0.14, 0.045],
-          focus("Costas"),
-        );
-        for (const y of [0.285, 0.225, 0.165])
-          muscle(
-            [sign * 0.037, y, 0.084],
-            [0.034, 0.027, 0.013],
-            focus("Abdômen"),
-          );
-      }
+      const model = createHumanModel(T, humanAsset, exercise);
+      scene.add(model.group);
       const cautionMat = new T.MeshBasicMaterial({
         color: "#ff585a",
         transparent: true,
@@ -248,61 +115,6 @@ export function ExerciseScene({
           scene.add(mesh);
           markers.push({ key, mesh });
         }
-      const model: Model = {
-        group: root,
-        update(b) {
-          for (const [key, mesh] of jointParts) {
-            mesh.position.set(...b[key as keyof Skeleton]);
-            const radius =
-              key === "head"
-                ? 0.089
-                : key === "hip"
-                  ? 0.13
-                  : key.includes("Shoulder")
-                    ? 0.068
-                    : key.includes("Knee")
-                      ? 0.052
-                      : key.includes("Elbow")
-                        ? 0.04
-                        : 0.037;
-            mesh.scale.set(
-              radius,
-              key === "head" ? 0.118 : radius,
-              radius * 0.86,
-            );
-          }
-          for (const bone of bones) {
-            const a = vector(b[bone.from]),
-              c = vector(b[bone.to]),
-              delta = c.clone().sub(a),
-              len = delta.length();
-            bone.mesh.position.copy(a).add(c).multiplyScalar(0.5);
-            bone.mesh.quaternion.setFromUnitVectors(yAxis, delta.normalize());
-            bone.mesh.scale.set(
-              bone.radius,
-              Math.max(0.001, len / 3),
-              bone.radius,
-            );
-          }
-          const direction = vector(b.chest).sub(vector(b.hip)).normalize();
-          const rotation = new T.Quaternion().setFromUnitVectors(
-            yAxis,
-            direction,
-          );
-          torso.position.set(...b.hip);
-          torso.quaternion.copy(rotation);
-          jointParts.get("head")?.quaternion.copy(rotation);
-          const pelvis = jointParts.get("hip");
-          if (pelvis) {
-            pelvis.quaternion.copy(rotation);
-            pelvis.scale.set(0.145, 0.095, 0.105);
-          }
-          torsoDetails.position.copy(torso.position);
-          torsoDetails.quaternion.copy(rotation);
-          for (const marker of markers)
-            marker.mesh.position.set(...b[marker.key]);
-        },
-      };
       const equipmentRoot = new T.Group();
       scene.add(equipmentRoot);
       const boxGeo = geom(new T.BoxGeometry(1, 1, 1)),
@@ -354,8 +166,8 @@ export function ExerciseScene({
           }
         });
       };
-      scene.add(new T.HemisphereLight("#c8d8ed", "#22242a", 1.45));
-      const keyLight = new T.DirectionalLight("#f0f4ff", 3.4);
+      scene.add(new T.HemisphereLight("#e7edf4", "#24262c", 1.3));
+      const keyLight = new T.DirectionalLight("#f0f4ff", 2.7);
       keyLight.position.set(-3, 5, 4);
       keyLight.castShadow = true;
       keyLight.shadow.mapSize.set(1024, 1024);
@@ -365,7 +177,7 @@ export function ExerciseScene({
       keyLight.shadow.camera.bottom = -3;
       keyLight.shadow.normalBias = 0.018;
       scene.add(keyLight);
-      const rim = new T.DirectionalLight("#45d9e9", 2.7);
+      const rim = new T.DirectionalLight("#82d7e5", 1.1);
       rim.position.set(2, 2, -4);
       scene.add(rim);
       const fill = new T.DirectionalLight("#738295", 0.8);
@@ -426,7 +238,7 @@ export function ExerciseScene({
         ) {
           renderer.setSize(width, height, false);
           const half = Math.max(
-            size.y * 0.61,
+            size.y * 0.53,
             size.z * 0.44,
             size.x * 0.6,
             1.06,
@@ -450,8 +262,10 @@ export function ExerciseScene({
           const f = getTimedExerciseMotion(exerciseId, state.current.progress);
           model.update(f.body);
           updateEquipment(f);
-          for (const marker of markers)
+          for (const marker of markers) {
+            marker.mesh.position.set(...f.body[marker.key]);
             marker.mesh.quaternion.copy(camera.quaternion);
+          }
           renderer.render(scene, camera);
           lastProgress = state.current.progress;
         }
@@ -460,6 +274,7 @@ export function ExerciseScene({
       const lost = (event: Event) => {
         event.preventDefault();
         setFallback(true);
+        onUnavailable?.();
       };
       renderer.domElement.addEventListener("webglcontextlost", lost);
       dispose = () => {
@@ -467,6 +282,7 @@ export function ExerciseScene({
         cancelAnimationFrame(raf);
         geometries.forEach((g) => g.dispose());
         materials.forEach((m) => m.dispose());
+        model.dispose();
         renderer.dispose();
         renderer.forceContextLoss();
         renderer.domElement.remove();
@@ -475,7 +291,10 @@ export function ExerciseScene({
       setReady(true);
     };
     initialize().catch(() => {
-      if (!stopped) setFallback(true);
+      if (!stopped) {
+        setFallback(true);
+        onUnavailable?.();
+      }
       dispose();
     });
     return () => {
@@ -483,7 +302,7 @@ export function ExerciseScene({
       cancelAnimationFrame(raf);
       dispose();
     };
-  }, [exerciseId]);
+  }, [exerciseId, onUnavailable]);
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <div
@@ -512,7 +331,7 @@ export function ExerciseScene({
             color: "#9ba6ae",
           }}
         >
-          Modo ilustrado compatível
+          Prévia estática · 3D indisponível neste navegador
         </span>
       )}
     </div>

@@ -1,0 +1,348 @@
+{
+  "schema": 1,
+  "kind": "continuous-human-cc0-base",
+  "previews": [
+    {
+      "exerciseId": "abdominal-na-polia",
+      "file": "abdominal-na-polia.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 12952,
+      "sha256": "d6f2e410cef9ee87899bd1b550203b9abea2e11072a1e3afeb89dc09e591f740",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "abducao-de-quadril",
+      "file": "abducao-de-quadril.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 10976,
+      "sha256": "c9f528c81d4b13ee276a0d98345f4a60818eec463eb0851b97ba54a1e173cbb6",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "afundo-com-halteres",
+      "file": "afundo-com-halteres.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 13000,
+      "sha256": "c121fd194c22daf875ffe5709cbcc892cc2175ed7e475ea9c8abaefc95038f35",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "agachamento-goblet",
+      "file": "agachamento-goblet.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 10194,
+      "sha256": "5c1d7355386d240b380827b5ef6a28d470b761a342476e8c46b33e16ccb077f3",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "agachamento-livre-com-barra",
+      "file": "agachamento-livre-com-barra.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 13194,
+      "sha256": "dfd11f5414ce9e3e4ce9c02175d768bb055f004b15d483151e73f7aac5877ef9",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "barra-fixa-assistida",
+      "file": "barra-fixa-assistida.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 17298,
+      "sha256": "f85eb6166711bfc2302a6b41465ec75f7d160af1fd5f3965ddb5b2730bb77082",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "cadeira-extensora",
+      "file": "cadeira-extensora.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 15684,
+      "sha256": "cb367a6db69e73fec57b1b93ca57c10fddee2112ca31434fef6a40a28ca31120",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "crucifixo-com-halteres",
+      "file": "crucifixo-com-halteres.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 14480,
+      "sha256": "d7e1b1c003796f499ef24816ab67a8fbe2f74aa0df4b004d41e9bc5f2d1ba9f3",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "crucifixo-na-polia",
+      "file": "crucifixo-na-polia.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 12054,
+      "sha256": "ea4b2140fed4dea7a48c8b9ed33abf5ce35c559b57f1cb504f7b4a8d676c81f5",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "dead-bug",
+      "file": "dead-bug.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 11856,
+      "sha256": "f9e973829aa80ba23765ef70d4a84c11a57cc85c3a4c9e0eff83bef1fd51de43",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "desenvolvimento-com-halteres",
+      "file": "desenvolvimento-com-halteres.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 12228,
+      "sha256": "022d928feb25ba2471853fc61e951da709c15868a774afd70c2a804db0ec75ba",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "desenvolvimento-na-maquina",
+      "file": "desenvolvimento-na-maquina.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 12218,
+      "sha256": "407314c1244c5835569d4048f6037a1e8c77614e321ec9ef3d2d883d6bd401b4",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "elevacao-lateral",
+      "file": "elevacao-lateral.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 10114,
+      "sha256": "7de8adce3db755d2f5ceaa5199f4dc5c23065a0c0809145e279a7866ac180e84",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "elevacao-pelvica",
+      "file": "elevacao-pelvica.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 15920,
+      "sha256": "f7a1b17e43d4c39c7564408df9e84669a94a929d472b7db12457029d1649f17b",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "face-pull",
+      "file": "face-pull.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 16278,
+      "sha256": "ec50600345075b57ad307cf5f592e0424ffe4d9db073609a85b2df79418d0b32",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "flexao-de-bracos",
+      "file": "flexao-de-bracos.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 14958,
+      "sha256": "742957aedda65d6b5687db570c3789655820beb9946e62dedde96fb2b56da65d",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "flexao-de-joelho-com-elastico",
+      "file": "flexao-de-joelho-com-elastico.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 13606,
+      "sha256": "8a2d904844dae5b605e7b5ba8b099e69c3312d78a87efce51891a7daf231b3d6",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "leg-press-45",
+      "file": "leg-press-45.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 18060,
+      "sha256": "6e96f0ebb13e49d16db7c1b4bf42c803b343b8982da5e4ceaf4a307c79a446b2",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "levantamento-terra-romeno",
+      "file": "levantamento-terra-romeno.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 12904,
+      "sha256": "cb04dfec7cf7d75a50aa271751610e7fe8f4eaf9d10f820b42085190de4681a6",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "mergulho-no-banco",
+      "file": "mergulho-no-banco.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 15052,
+      "sha256": "0045c601341b044690d1c804941ee06b3639642966918ec06bf6938f5bc3228a",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "mesa-flexora",
+      "file": "mesa-flexora.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 14862,
+      "sha256": "1d4af53f660dd65dfb495316720d95c08623dd71375eb8bf534c1bdb47c6be54",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "panturrilha-em-pe",
+      "file": "panturrilha-em-pe.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 14566,
+      "sha256": "84be55eb74484d3116cdd4f5f48a3eacadbe23e58ef943b0880f9f4e9a82119e",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "panturrilha-sentado",
+      "file": "panturrilha-sentado.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 13866,
+      "sha256": "3c99848c6472cb64df34f2391e1ddaa78aa99ffbe32fb20dee0cd1246b55a1ec",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "prancha",
+      "file": "prancha.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 14888,
+      "sha256": "cd7a8f9c9ad81b0bfa4ed0977086834d815fc5218e56996c2091cc88e0b527cf",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "puxada-com-elastico",
+      "file": "puxada-com-elastico.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 16212,
+      "sha256": "307dc180601fab622ed3afc3c046f992db2d537a895cd759bf6a19e1561cdc73",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "puxada-frontal-na-polia",
+      "file": "puxada-frontal-na-polia.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 15514,
+      "sha256": "fc0a7f90b6fa9bbf95b2442217b225f462e8ec75c399807ec27cda85ad93b7d4",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "remada-baixa-na-polia",
+      "file": "remada-baixa-na-polia.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 13560,
+      "sha256": "2d33028f1e59ad73b3a14c133016f8d2a6488957090483800eba5aa718b1adf6",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "remada-com-elastico",
+      "file": "remada-com-elastico.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 13526,
+      "sha256": "339cda5bfba1d1f1bcbac4c977212fde1bb5a9bc24d8b292303ca6e5c06b6981",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "remada-curvada-com-barra",
+      "file": "remada-curvada-com-barra.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 13980,
+      "sha256": "55b4b13c682b5cc09686c30f69903a2df4e7ee6eb3e48f839afab75cc24b2089",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "remada-unilateral-com-halter",
+      "file": "remada-unilateral-com-halter.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 14612,
+      "sha256": "10558cb795882b2e3f6907bb2e5c3f3dec913bcccad25826606449c7adbbe629",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "rosca-direta",
+      "file": "rosca-direta.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 11704,
+      "sha256": "28b6034ddfc990ae6f56acdf5018a309d9bca1f806a8d3aa46140dde1f90cb71",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "rosca-martelo",
+      "file": "rosca-martelo.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 11556,
+      "sha256": "1560e703607bd115c975a3c8c143e5c82eb57ae074ddb46716a6da6d9b7ad748",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "rosca-na-polia",
+      "file": "rosca-na-polia.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 13768,
+      "sha256": "2db9381668aac0cbead0195d57b5b483d749271c2534a63e9cb9a9799e20e0bc",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "supino-na-maquina",
+      "file": "supino-na-maquina.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 14250,
+      "sha256": "307cd72e944e21d2c90e9b6738e38b27b260b93ac998e726fac3842a08fec266",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "supino-reto-com-barra",
+      "file": "supino-reto-com-barra.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 16042,
+      "sha256": "745b427765ae96cde46056f7aef63cd63ff733e97ed2c897ad43d67576e477e8",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "supino-reto-com-halteres",
+      "file": "supino-reto-com-halteres.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 14062,
+      "sha256": "8cd0b3c3dfd0079973b150e70de688083e6a9d018e22fe149fc118fb8a53a938",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "triceps-frances-com-halter",
+      "file": "triceps-frances-com-halter.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 14202,
+      "sha256": "29f7f99299a4bdc5165aac8e93c6ae03ecd4b99680f3e3b63983ec9356d9dfb5",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    },
+    {
+      "exerciseId": "triceps-na-polia",
+      "file": "triceps-na-polia.webp",
+      "width": 640,
+      "height": 640,
+      "bytes": 13764,
+      "sha256": "a0f31ce961f0e258f3bcce822bc0f3c32c2f4927ef020f41befc0d323a7e5c76",
+      "humanModelSha256": "4c8171abfe969848a605229dc6c5ce1415c19909e1eff06c83013255217f907a"
+    }
+  ]
+}
