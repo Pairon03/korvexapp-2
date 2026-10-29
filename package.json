@@ -16,7 +16,9 @@
     "admin": "tsx scripts/admin.ts",
     "seed": "tsx scripts/seed.ts",
     "format": "prettier --write src scripts tests docs *.json *.mjs *.ts *.md",
-    "test:preview": "node scripts/preview-smoke.mjs"
+    "test:preview": "node scripts/preview-smoke.mjs",
+    "test:library": "node scripts/library-smoke.mjs",
+    "export:motion": "node --import tsx scripts/export-exercise-motion.ts"
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.5.1",
@@ -27,6 +29,7 @@
     "react-dom": "^19.2.0",
     "sharp": "^0.34.5",
     "stripe": "^20.0.0",
+    "three": "0.186.1",
     "zod": "^4.1.12"
   },
   "devDependencies": {
@@ -36,6 +39,7 @@
     "@types/pg": "^8.15.6",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
+    "@types/three": "0.186.0",
     "dotenv": "^17.2.3",
     "eslint": "^9.39.0",
     "eslint-config-next": "^16.0.0",

@@ -11,7 +11,11 @@ import {
   BrainCircuit,
   ArrowLeft,
   Eye,
+  BookOpen,
 } from "lucide-react";
+import { ExerciseLibrary } from "./exercise-library";
+import { ExerciseDemonstration } from "./exercise-animation";
+import { getCatalogExercise } from "@/domain/exercise-catalog";
 const students = [
   {
     id: "example-1",
@@ -34,8 +38,20 @@ const program = {
     {
       name: "Treino A · exemplo visual",
       exercises: [
-        { name: "Agachamento livre", sets: 3, reps: "8–12", rest: 60 },
-        { name: "Remada com halteres", sets: 3, reps: "8–12", rest: 60 },
+        {
+          id: "agachamento-goblet",
+          name: "Agachamento goblet",
+          sets: 3,
+          reps: "8–12",
+          rest: 60,
+        },
+        {
+          id: "remada-unilateral-com-halter",
+          name: "Remada unilateral com halter",
+          sets: 3,
+          reps: "8–12",
+          rest: 60,
+        },
       ],
     },
   ],
@@ -43,6 +59,7 @@ const program = {
 const tabs = [
   { id: "overview", label: "Visão geral", Icon: LayoutDashboard },
   { id: "students", label: "Alunos", Icon: Users },
+  { id: "library", label: "Biblioteca", Icon: BookOpen },
   { id: "programs", label: "Programas", Icon: Dumbbell },
   { id: "assessments", label: "Avaliações", Icon: ClipboardCheck },
   { id: "agents", label: "Agentes de IA", Icon: BrainCircuit },
@@ -53,6 +70,7 @@ export function Preview() {
   const [tab, setTab] = useState<Tab>("overview"),
     [studentView, setStudentView] = useState(false),
     [query, setQuery] = useState("");
+  const [exampleIds, setExampleIds] = useState<string[]>([]);
   const visible = studentView
     ? tabs.filter((t) => ["overview", "programs", "assessments"].includes(t.id))
     : tabs;
@@ -198,6 +216,31 @@ export function Preview() {
             </p>
           </section>
         )}
+        {tab === "library" && (
+          <div style={{ marginTop: 28 }}>
+            <p className="notice">
+              Escolha exercícios para o treino de exemplo. A seleção fica apenas
+              nesta página e é apagada ao recarregar.
+            </p>
+            <ExerciseLibrary
+              compact
+              importedIds={exampleIds}
+              onSelect={(ex) =>
+                setExampleIds((ids) =>
+                  ids.includes(ex.id) ? ids : [...ids, ex.id],
+                )
+              }
+            />
+            <div className="flex" style={{ marginTop: 20 }}>
+              <button className="primary" onClick={() => setTab("programs")}>
+                Ver treino de exemplo ({exampleIds.length} adicionados)
+              </button>
+              <Link className="button quiet" href="/biblioteca">
+                Abrir biblioteca completa
+              </Link>
+            </div>
+          </div>
+        )}
         {tab === "programs" && (
           <section className="stack" style={{ marginTop: 24 }}>
             <article className="card">
@@ -218,10 +261,43 @@ export function Preview() {
                         {e.sets} séries · {e.reps} repetições · {e.rest}s de
                         descanso
                       </p>
+                      <ExerciseDemonstration exerciseId={e.id} />
                     </article>
                   ))}
                 </section>
               ))}
+              {exampleIds.length > 0 && (
+                <section style={{ marginTop: 24 }}>
+                  <h3>Exercícios escolhidos na biblioteca</h3>
+                  <p className="muted">
+                    Seleção ilustrativa, sem prescrição de séries ou cargas.
+                  </p>
+                  {exampleIds.map((id) => {
+                    const ex = getCatalogExercise(id);
+                    return (
+                      ex && (
+                        <article key={id} className="workout-exercise">
+                          <strong>{ex.name}</strong>
+                          <p className="muted">{ex.instruction}</p>
+                          <ExerciseDemonstration exerciseId={id} />
+                          {!studentView && (
+                            <button
+                              style={{ marginTop: 12 }}
+                              onClick={() =>
+                                setExampleIds((ids) =>
+                                  ids.filter((x) => x !== id),
+                                )
+                              }
+                            >
+                              Remover do exemplo
+                            </button>
+                          )}
+                        </article>
+                      )
+                    );
+                  })}
+                </section>
+              )}
             </article>
             <div className="card">
               <h3>Registro do treino</h3>

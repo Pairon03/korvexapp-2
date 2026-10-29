@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { getCatalogExercise } from "./exercise-catalog";
 export const id = z.uuid();
 export const credentials = z
   .object({
@@ -38,6 +39,13 @@ export const assessmentInput = z
     notes: z.string().max(2000).default(""),
   })
   .strict();
+export const catalogImportInput = z
+  .object({ catalogId: z.string().min(1).max(100) })
+  .strict()
+  .refine((value) => !!getCatalogExercise(value.catalogId), {
+    message: "Exercício não encontrado na biblioteca padrão.",
+    path: ["catalogId"],
+  });
 export const exerciseInput = z
   .object({
     name: z.string().trim().min(2).max(100),

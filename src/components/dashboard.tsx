@@ -30,6 +30,7 @@ import {
 import type { Agent, DashboardData, Version } from "./types";
 import { Workout } from "./workout";
 import { Photos } from "./photos";
+import { ExerciseLibrary } from "./exercise-library";
 type Tab =
   | "overview"
   | "students"
@@ -580,41 +581,70 @@ export function Dashboard() {
         )}
         {tab === "exercises" && (
           <>
-            <div className="toolbar">
-              <input
-                aria-label="Buscar exercício"
-                placeholder="Buscar por nome, grupo ou equipamento"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-              {newButton("exercise", "Adicionar exercício")}
-            </div>
-            <div className="grid">
-              {data.exercises
-                .filter((e) =>
-                  `${e.name} ${e.muscle} ${e.equipment}`
-                    .toLowerCase()
-                    .includes(query.toLowerCase()),
-                )
-                .map((e) => (
-                  <article key={e.id} className="card">
-                    <Dumbbell className="accent" size={22} />
-                    <h3 style={{ marginTop: 18 }}>{e.name}</h3>
-                    <small>
-                      {e.muscle} · {e.equipment}
-                    </small>
-                    <p className="muted" style={{ marginTop: 12 }}>
-                      {e.instructions}
-                    </p>
-                  </article>
-                ))}
-            </div>
-            {!data.exercises.length && (
-              <Empty>
-                A biblioteca está vazia. Cadastre exercícios próprios com
-                instruções autorizadas.
-              </Empty>
-            )}
+            <ExerciseLibrary
+              compact
+              importedIds={data.exercises.flatMap((exercise) =>
+                exercise.catalog_id ? [exercise.catalog_id] : [],
+              )}
+              onSelect={async (exercise) => {
+                if (busy) throw Error("Aguarde a operação em andamento.");
+                const saved = await run(
+                  "exercises/import",
+                  { catalogId: exercise.id },
+                  { close: false },
+                );
+                if (!saved)
+                  throw Error(
+                    "A importação não foi confirmada. Consulte o aviso do painel e tente novamente.",
+                  );
+              }}
+            />
+            <section
+              aria-label="Sua biblioteca de exercícios"
+              style={{ marginTop: 32 }}
+            >
+              <h2>Sua biblioteca</h2>
+              <p className="muted">
+                Ao importar, usamos o primeiro equipamento da ficha padrão.
+                Cadastre no perfil do aluno o mesmo equipamento indicado no
+                exercício.
+              </p>
+              <div className="toolbar">
+                <input
+                  aria-label="Buscar exercício"
+                  placeholder="Buscar por nome, grupo ou equipamento"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                />
+                {newButton("exercise", "Adicionar exercício")}
+              </div>
+              <div className="grid">
+                {data.exercises
+                  .filter((e) =>
+                    `${e.name} ${e.muscle} ${e.equipment}`
+                      .toLowerCase()
+                      .includes(query.toLowerCase()),
+                  )
+                  .map((e) => (
+                    <article key={e.id} className="card">
+                      <Dumbbell className="accent" size={22} />
+                      <h3 style={{ marginTop: 18 }}>{e.name}</h3>
+                      <small>
+                        {e.muscle} · {e.equipment}
+                      </small>
+                      <p className="muted" style={{ marginTop: 12 }}>
+                        {e.instructions}
+                      </p>
+                    </article>
+                  ))}
+              </div>
+              {!data.exercises.length && (
+                <Empty>
+                  Importe um exercício padrão acima ou cadastre seu próprio
+                  exercício com instruções autorizadas.
+                </Empty>
+              )}
+            </section>
           </>
         )}
         {tab === "agents" && (

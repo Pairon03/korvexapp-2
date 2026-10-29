@@ -14,6 +14,7 @@ export type Student = {
 };
 export type Exercise = {
   id: string;
+  catalog_id?: string | null;
   name: string;
   muscle: string;
   equipment: string;

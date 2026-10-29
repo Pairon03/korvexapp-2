@@ -8,3 +8,6 @@ test-results/
 next-env.d.ts
 
 .vercel/
+
+__pycache__/
+*.py[cod]

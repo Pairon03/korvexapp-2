@@ -1,0 +1,332 @@
+.player {
+  --mint: #ff9b52;
+  background: #111923;
+  border: 1px solid #34434d;
+  border-radius: 20px;
+  overflow: hidden;
+  width: 100%;
+  color: #e9eef4;
+  isolation: isolate;
+}
+.topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 17px 22px;
+  border-bottom: 1px solid #ffffff0c;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  color: #7f93a5;
+}
+.topline span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #d5dfe6;
+}
+.topline i {
+  width: 5px;
+  height: 5px;
+  background: var(--mint);
+  border-radius: 50%;
+  box-shadow: 0 0 10px #c7f98e33;
+}
+.stage {
+  position: relative;
+  aspect-ratio: 1.75;
+  background: radial-gradient(
+    ellipse at 50% 32%,
+    #263541 0%,
+    #15212c 52%,
+    #101923 100%
+  );
+  overflow: hidden;
+  min-height: 230px;
+}
+.figure {
+  position: absolute;
+  inset: 0;
+}
+.stageLabel {
+  position: absolute;
+  left: 22px;
+  top: 20px;
+  z-index: 2;
+  font-size: 12px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 7px;
+  align-items: center;
+}
+.stageLabel small {
+  grid-column: 2;
+  font-size: 9px;
+  color: #899da9;
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mint);
+}
+.angle {
+  position: absolute;
+  bottom: 17px;
+  left: 22px;
+  font-size: 8px;
+  letter-spacing: 1.4px;
+  color: #8c9ca9;
+}
+.stagePlay {
+  position: absolute;
+  bottom: 18px;
+  right: 22px;
+  padding: 12px;
+  border: 1px solid #b8d98a4a !important;
+  background: #18241de0 !important;
+  border-radius: 50% !important;
+  color: var(--mint) !important;
+  box-shadow: 0 3px 25px #0003;
+  backdrop-filter: blur(8px);
+}
+.phase {
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid #ffffff0d;
+  border-bottom: 1px solid #ffffff0d;
+  background: #0c131a55;
+}
+.phase > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.phaseNumber {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #c7f98e12;
+  color: var(--mint);
+  border: 1px solid #c7f98e20;
+}
+.phase strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.phase p {
+  font-size: 11px;
+  color: #97a9b6;
+  margin: 2px 0 0;
+}
+.vector {
+  font-size: 9px;
+  color: #8a9da9;
+  white-space: nowrap;
+}
+.controls {
+  padding: 7px 18px 12px;
+}
+.timeline {
+  display: block;
+  padding: 5px 0;
+}
+.timeline input {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 3px;
+  min-height: 3px;
+  width: 100%;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 20px;
+  background: #34434f;
+  cursor: pointer;
+  accent-color: var(--mint);
+}
+.timeline input::-webkit-slider-thumb {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 0 3px #c7f98e15;
+}
+.timeline input::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--mint);
+  border: 0;
+}
+.controlRow,
+.controlGroup {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.controlRow {
+  justify-content: space-between;
+  gap: 10px;
+}
+.controls button {
+  padding: 8px;
+  background: transparent;
+  border-color: transparent;
+  color: #acbcc8;
+  border-radius: 7px;
+  font-size: 11px;
+}
+.controls button:hover {
+  background: #ffffff0a;
+  color: #fff;
+}
+.controls .play {
+  color: var(--mint);
+  padding-left: 0;
+  gap: 7px;
+}
+.selectControl {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #8ea4b5;
+}
+.selectControl select {
+  width: auto;
+  background: transparent;
+  padding: 6px 2px;
+  border-color: transparent;
+  font-size: 11px;
+  color: #c8d3dd;
+  cursor: pointer;
+  max-width: 120px;
+}
+.selectControl select option {
+  background: #111923;
+}
+.caption {
+  font-size: 10px;
+  color: #8295a3;
+  padding: 0 22px 15px;
+  margin: 0;
+  line-height: 1.5;
+}
+.player:fullscreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 0;
+  max-width: none;
+  background: #0c1219;
+}
+.player:fullscreen .stage {
+  aspect-ratio: auto;
+  flex: 1;
+}
+.player:fullscreen .figure {
+  left: 10%;
+  right: 10%;
+}
+.compact .topline {
+  padding: 11px 15px;
+}
+.compact .stage {
+  min-height: 180px;
+}
+.compact .phase {
+  padding: 12px 15px;
+}
+.compact .vector {
+  display: none;
+}
+@media (max-width: 600px) {
+  .stage {
+    aspect-ratio: 1.25;
+    min-height: 210px;
+  }
+  .topline {
+    padding: 14px 16px;
+    font-size: 8px;
+    letter-spacing: 1.3px;
+  }
+  .topline span:last-child {
+    font-size: 7px;
+  }
+  .stageLabel {
+    left: 16px;
+    top: 15px;
+  }
+  .angle {
+    left: 16px;
+  }
+  .phase {
+    padding: 14px 16px;
+  }
+  .phase p {
+    font-size: 10px;
+  }
+  .vector {
+    display: none;
+  }
+  .controls {
+    padding: 8px 10px 10px;
+  }
+  .controlRow {
+    gap: 4px;
+  }
+  .controls button {
+    padding: 7px;
+  }
+  .controls .play span {
+    display: none;
+  }
+  .selectControl select {
+    font-size: 10px;
+    max-width: 105px;
+  }
+  .fullscreen {
+    display: none !important;
+  }
+  .caption {
+    font-size: 9px;
+    padding: 0 16px 14px;
+  }
+}
+
+.legend {
+  display: flex;
+  gap: 6px 16px;
+  flex-wrap: wrap;
+  padding: 2px 22px 12px;
+  font-size: 9px;
+  color: #a5b1bd;
+}
+.legend span {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.legend i {
+  height: 5px;
+  width: 5px;
+  display: inline-block;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .controls button {
+    min-width: 36px;
+    min-height: 40px;
+  }
+  .selectControl select {
+    min-height: 40px;
+    font-size: 11px;
+  }
+}

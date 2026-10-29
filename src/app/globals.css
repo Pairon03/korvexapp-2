@@ -636,3 +636,27 @@ dialog .close {
 dialog {
   margin: auto;
 }
+.exercise-demonstration {
+  margin: 16px 0;
+  max-width: 760px;
+}
+.exercise-demonstration summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--accent);
+  padding: 12px 0;
+}
+.exercise-demonstration summary::-webkit-details-marker {
+  display: none;
+}
+.exercise-demonstration summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.exercise-demonstration[open] summary {
+  margin-bottom: 8px;
+}

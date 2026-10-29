@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { Play, Check, SkipForward } from "lucide-react";
 import type { Version, Exercise } from "./types";
+import { ExerciseDemonstration } from "./exercise-animation";
+import { getCatalogExercise } from "@/domain/exercise-catalog";
 type SetLog = { exerciseId: string; kg: number; reps: number; rpe: number };
 type Draft = {
   requestId: string;
@@ -91,6 +93,10 @@ export function Workout({
                   repetições · {planned.restSeconds}s descanso
                 </p>
                 <small>{planned.notes}</small>
+                {exercise?.catalog_id &&
+                  getCatalogExercise(exercise.catalog_id) && (
+                    <ExerciseDemonstration exerciseId={exercise.catalog_id} />
+                  )}
                 <form
                   className="set-row"
                   onSubmit={(e) => {

@@ -1,3 +1,9 @@
+# FitCore Korvex — biblioteca de movimento
+
+A biblioteca em `/biblioteca` reúne os **38 exercícios** do catálogo fornecido, com animações 3D originais, busca, filtros e fichas de execução. O personal importa exercícios canônicos na aplicação conectada; a animação acompanha o vínculo no treino do aluno. A prévia permite experimentar a seleção sem salvar dados.
+
+Detalhes, limites visuais e validação: [biblioteca de exercícios](docs/EXERCISE-LIBRARY.md). Pipeline de vídeos: [produção 3D](docs/3D-PRODUCTION.md).
+
 # FitCore — repositório de publicação
 
 Este repositório contém a plataforma Next.js do FitCore, preparada para importar

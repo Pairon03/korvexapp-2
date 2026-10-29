@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { actor, issueToken, withIdentity, rateLimit } from "@/server/auth";
 import { authAction } from "@/server/auth-actions";
 import { admin, scoped, staff, one, audit } from "@/server/db";
+import { importCatalogExercise } from "@/server/exercise-catalog";
 import { previewPlans } from "@/server/preview-plans";
 import { AppError, config } from "@/server/config";
 import {
@@ -471,6 +472,20 @@ async function handle(req: NextRequest, ctx: Context) {
           return row;
         }),
         { status: 201 },
+      );
+    }
+    if (path === "exercises/import" && method === "POST") {
+      const result = await scoped(a, (db) =>
+        importCatalogExercise(db, a, body),
+      );
+      return NextResponse.json(
+        {
+          ...result.exercise,
+          message: result.created
+            ? "Exercício e animação adicionados à sua biblioteca."
+            : "Este exercício já está na sua biblioteca.",
+        },
+        { status: result.created ? 201 : 200 },
       );
     }
     if (path === "exercises" && method === "POST") {
